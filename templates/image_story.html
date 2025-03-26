@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Story</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+</head>
+<body>
+
+    <div class="story-container">
+        <h1>Your Generated Story</h1>
+        
+        <div class="story-box">
+            <p id="story-text">{{ story }}</p>
+        </div>
+
+        <div class="icon-buttons">
+            <button onclick="copyStory()" title="Copy Story">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button onclick="readStory()" title="Read Aloud">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+
+        <button class="generate-new-btn" onclick="window.location.href='{{ url_for('index') }}'">
+            Generate New Story
+        </button>
+    </div>
+
+    <script>
+        function copyStory() {
+            navigator.clipboard.writeText(document.getElementById("story-text").innerText);
+            alert("Story copied to clipboard!");
+        }
+
+        function readStory() {
+            let text = document.getElementById("story-text").innerText;
+            let speech = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(speech);
+        }
+    </script>
+
+</body>
+</html>
