@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Writer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script>
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+    </script>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">Story Writer</a>
+            <div>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Story Writer</h1>
+
+        <!-- Story from Key Points -->
+        <form action="/generate_story" method="POST" class="mt-4 p-4 bg-white shadow rounded" onsubmit="showLoading()">
+            <label class="form-label">Enter Key Points for Story:</label>
+            <textarea class="form-control" name="key_points" rows="3" required></textarea>
+
+            <label class="form-label mt-3">Select Genre:</label>
+            <select class="form-select" name="genre" required>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Horror">Horror</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Adventure">Adventure</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary mt-3">Generate Story</button>
+        </form>
+
+        <!-- Story from Image -->
+        <form action="/image_story" method="POST" enctype="multipart/form-data" class="mt-4 p-4 bg-white shadow rounded" onsubmit="showLoading()">
+            <label class="form-label">Upload an Image:</label>
+            <input type="file" name="image" class="form-control" accept="image/*" required>
+            <button type="submit" class="btn btn-success mt-3">Generate Story from Image</button>
+        </form>
+
+        <!-- Loading Animation -->
+        <div id="loading" class="text-center mt-4" style="display: none;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p>Generating story...</p>
+        </div>
+    </div>
+</body>
+</html>

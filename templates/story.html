@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Your Story</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your AI-Generated Story</h1>
+        <p>{{ story }}</p>
+        
+        <!-- Regenerate Story -->
+        <form action="/" method="post">
+            <input type="hidden" name="key_points" value="{{ key_points }}">
+            <button type="submit">Regenerate Story</button>
+        </form>
+
+        <form action="/download" method="post">
+            <input type="hidden" name="story" value="{{ story }}">
+            <button type="submit">Download as TXT</button>
+        </form>
+
+        <a href="/">Generate Another Story</a>
+    </div>
+</body>
+</html>
