@@ -48,15 +48,18 @@ def index():
 def generate_story():
     if request.method == "POST":
         key_points = request.form["key_points"]
-        prompt = f"Write a creative and engaging story based on these key points: {key_points}"
+        selected_genre = request.form["genre"]  # Get genre from form
+
+        prompt = f"Write a {selected_genre} story based on these key points: {key_points}"
         response = model.generate_content(prompt)
 
         if response:
             story_text = response.text
-            return render_template("generate_story.html", story=story_text)
+            return render_template("story.html", story=story_text, genre=selected_genre)
 
         flash("Error generating story. Try again!", "danger")
         return redirect(url_for("index"))
+
 
 
 # Generate Story from Image
@@ -88,6 +91,7 @@ def image_story():
         return redirect(url_for("index"))
 
     return render_template("index.html", enable_image_upload=True)
+
 
 
 # Run Flask App
