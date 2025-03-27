@@ -2,25 +2,103 @@
 <html lang="en">
 <head>
     <title>Your Story</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let genre = "{{ genre }}"; // Get genre from Flask
+            let bgImage = {
+                "Sci-Fi": "{{ url_for('static', filename='uploads/sci-bg.jpg') }}",
+                "Fantasy": "{{ url_for('static', filename='uploads/fantasy-bg.jpg') }}",
+                "Horror": "{{ url_for('static', filename='uploads/horror-bg.jpg') }}",
+                "Mystery": "{{ url_for('static', filename='uploads/mystery-bg.jpg') }}",
+                "Adventure": "{{ url_for('static', filename='uploads/advent-bg.jpg') }}"
+            };
+
+            // Apply background if genre exists
+            if (bgImage[genre]) {
+                document.body.style.backgroundImage = `url(${bgImage[genre]})`;
+                document.body.style.backgroundSize = "cover";
+                document.body.style.backgroundPosition = "center";
+                document.body.style.backgroundRepeat = "no-repeat";
+                document.body.style.backgroundAttachment = "fixed";
+            }
+        });
+
+        function copyStory() {
+            let storyText = document.getElementById("story-text").innerText;
+            navigator.clipboard.writeText(storyText).then(() => {
+                alert("Story copied to clipboard!");
+            });
+        }
+
+        function readAloud() {
+            let storyText = document.getElementById("story-text").innerText;
+            let speech = new SpeechSynthesisUtterance(storyText);
+            speech.lang = "en-US";
+            speechSynthesis.speak(speech);
+        }
+    </script>
+
+    <style>
+        /* Ensures the story container is visible on all backgrounds */
+        .story-container {
+            background: rgba(58, 58, 56, 0.685); /* Dark semi-transparent overlay */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: justify;
+            text-align-last: center;
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .story-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .action-buttons button, .generate-new-btn {
+            background-color: #ff9800;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .action-buttons button:hover, .generate-new-btn:hover {
+            background-color: #e68900;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Your AI-Generated Story</h1>
-        <p>{{ story }}</p>
-        
+    <div class="story-container">
+        <h1>Your {{ genre.capitalize() }} Story</h1>
+
+        <div class="story-content">
+            <p id="story-text">{{ story }}</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button onclick="copyStory()">📋 Copy</button>
+            <button onclick="readAloud()">🔊 Read Aloud</button>
+        </div>
+
         <!-- Regenerate Story -->
         <form action="/" method="post">
             <input type="hidden" name="key_points" value="{{ key_points }}">
-            <button type="submit">Regenerate Story</button>
+            <button type="submit">🔄 Regenerate Story</button>
         </form>
 
+        <!-- Download Button -->
         <form action="/download" method="post">
             <input type="hidden" name="story" value="{{ story }}">
-            <button type="submit">Download as TXT</button>
+            <button type="submit">⬇ Download as TXT</button>
         </form>
 
-        <a href="/">Generate Another Story</a>
+        <!-- Go Back to Home -->
+        <button class="generate-new-btn" onclick="window.location.href='{{ url_for('index') }}'">🏠 Generate Another Story</button>
     </div>
 </body>
 </html>
