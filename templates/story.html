@@ -1,28 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Your Story</title>
+    <title>{{ title }}</title>  <!-- ✅ Set page title dynamically -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let genre = "{{ genre }}"; // Get genre from Flask
-            let bgImage = {
-                "Sci-Fi": "{{ url_for('static', filename='uploads/sci-bg.jpg') }}",
-                "Fantasy": "{{ url_for('static', filename='uploads/fantasy-bg.jpg') }}",
-                "Horror": "{{ url_for('static', filename='uploads/horror-bg.jpg') }}",
-                "Mystery": "{{ url_for('static', filename='uploads/mystery-bg.jpg') }}",
-                "Adventure": "{{ url_for('static', filename='uploads/advent-bg.jpg') }}"
-            };
-
-            // Apply background if genre exists
-            if (bgImage[genre]) {
-                document.body.style.backgroundImage = `url(${bgImage[genre]})`;
-                document.body.style.backgroundSize = "cover";
-                document.body.style.backgroundPosition = "center";
-                document.body.style.backgroundRepeat = "no-repeat";
-                document.body.style.backgroundAttachment = "fixed";
-            }
+            let bgImage = "{{ url_for('static', filename='uploads/default-bg.jpg') }}";
+            document.body.style.backgroundImage = `url(${bgImage})`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+            document.body.style.backgroundRepeat = "no-repeat";
+            document.body.style.backgroundAttachment = "fixed";
         });
 
         function copyStory() {
@@ -41,9 +30,8 @@
     </script>
 
     <style>
-        /* Ensures the story container is visible on all backgrounds */
         .story-container {
-            background: rgba(58, 58, 56, 0.685); /* Dark semi-transparent overlay */
+            background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -73,31 +61,27 @@
 
 <body>
     <div class="story-container">
-        <h1>Your {{ genre.capitalize() }} Story</h1>
+        <h1>{{ title }}</h1>  <!-- ✅ Display generated title -->
 
         <div class="story-content">
             <p id="story-text">{{ story }}</p>
         </div>
 
-        <!-- Action Buttons -->
         <div class="action-buttons">
             <button onclick="copyStory()">📋 Copy</button>
             <button onclick="readAloud()">🔊 Read Aloud</button>
         </div>
 
-        <!-- Regenerate Story -->
         <form action="/" method="post">
             <input type="hidden" name="key_points" value="{{ key_points }}">
             <button type="submit">🔄 Regenerate Story</button>
         </form>
 
-        <!-- Download Button -->
         <form action="/download" method="post">
             <input type="hidden" name="story" value="{{ story }}">
             <button type="submit">⬇ Download as TXT</button>
         </form>
 
-        <!-- Go Back to Home -->
         <button class="generate-new-btn" onclick="window.location.href='{{ url_for('index') }}'">🏠 Generate Another Story</button>
     </div>
 </body>
