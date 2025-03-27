@@ -37,6 +37,28 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# Function to Generate Story and Short Title
+def generate_story_and_title(key_points, genre=None):
+    """Generates a unique short title (2-3 words) and story content based on key points."""
+    
+    if genre:
+        story_prompt = f"Write a {genre} story based on these key points: {key_points}"
+    else:
+        story_prompt = f"Write a creative and engaging story based on these key points: {key_points}"
+    
+    title_prompt = f"Generate a short and catchy title (max 3 words) for a story based on these key points: {key_points}"
+
+    # Generate the story
+    story_response = model.generate_content(story_prompt)
+    story_text = story_response.text if story_response else "Story generation failed."
+
+    # Generate the title (ensuring it's short)
+    title_response = model.generate_content(title_prompt)
+    story_title = title_response.text.strip().split("\n")[0] if title_response else "Untitled"
+
+    return story_title, story_text.strip()
+
+
 # Home Route (Index Page)
 @app.route("/")
 def index():
@@ -48,18 +70,15 @@ def index():
 def generate_story():
     if request.method == "POST":
         key_points = request.form["key_points"]
-        selected_genre = request.form["genre"]  # Get genre from form
+        selected_genre = request.form.get("genre")  # Genre is optional
 
-        prompt = f"Write a {selected_genre} story based on these key points: {key_points}"
-        response = model.generate_content(prompt)
+        title, story_text = generate_story_and_title(key_points, selected_genre)
 
-        if response:
-            story_text = response.text
-            return render_template("story.html", story=story_text, genre=selected_genre)
+        if story_text:
+            return render_template("story.html", title=title, story=story_text)
 
         flash("Error generating story. Try again!", "danger")
         return redirect(url_for("index"))
-
 
 
 # Generate Story from Image
@@ -85,13 +104,16 @@ def image_story():
 
         if response:
             story_text = response.text
-            return render_template("image_story.html", story=story_text, image=filepath)
+            title_prompt = "Generate a short and catchy title (max 3 words) for this story."
+            title_response = model.generate_content(title_prompt)
+            story_title = title_response.text.strip().split("\n")[0] if title_response else "Untitled"
+
+            return render_template("image_story.html", title=story_title, story=story_text, image=filepath)
 
         flash("Error generating story from image. Try again!", "danger")
         return redirect(url_for("index"))
 
     return render_template("index.html", enable_image_upload=True)
-
 
 
 # Run Flask App
