@@ -6,12 +6,21 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let bgImage = "{{ url_for('static', filename='uploads/default-bg.jpg') }}";
-            document.body.style.backgroundImage = `url(${bgImage})`;
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundPosition = "center";
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundAttachment = "fixed";
+            let bgImages = {
+                "Sci-Fi": "{{ url_for('static', filename='uploads/sci-bg.jpg') }}",
+                "Fantasy": "{{ url_for('static', filename='uploads/fantasy-bg.jpg') }}",
+                "Horror": "{{ url_for('static', filename='uploads/horror-bg.jpg') }}",
+                "Mystery": "{{ url_for('static', filename='uploads/mystery-bg.jpg') }}",
+                "Adventure": "{{ url_for('static', filename='uploads/advent-bg.jpg') }}"
+            };
+
+            if (bgImages["{{ genre }}"]) {
+                document.body.style.backgroundImage = `url(${bgImages["{{ genre }}"]})`;
+                document.body.style.backgroundSize = "cover";
+                document.body.style.backgroundPosition = "center";
+                document.body.style.backgroundRepeat = "no-repeat";
+                document.body.style.backgroundAttachment = "fixed";
+            }
         });
 
         function copyStory() {
@@ -30,15 +39,21 @@
     </script>
 
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
         .story-container {
             background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 20px;
             border-radius: 10px;
             text-align: justify;
-            text-align-last: center;
             max-width: 800px;
             margin: 50px auto;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
         }
         .story-content {
             font-size: 18px;
