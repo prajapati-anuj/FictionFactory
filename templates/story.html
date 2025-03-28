@@ -6,21 +6,21 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let bgImages = {
-                "Sci-Fi": "{{ url_for('static', filename='uploads/sci-bg.jpg') }}",
-                "Fantasy": "{{ url_for('static', filename='uploads/fantasy-bg.jpg') }}",
-                "Horror": "{{ url_for('static', filename='uploads/horror-bg.jpg') }}",
-                "Mystery": "{{ url_for('static', filename='uploads/mystery-bg.jpg') }}",
-                "Adventure": "{{ url_for('static', filename='uploads/advent-bg.jpg') }}"
-            };
-
-            if (bgImages["{{ genre }}"]) {
-                document.body.style.backgroundImage = `url(${bgImages["{{ genre }}"]})`;
-                document.body.style.backgroundSize = "cover";
-                document.body.style.backgroundPosition = "center";
-                document.body.style.backgroundRepeat = "no-repeat";
-                document.body.style.backgroundAttachment = "fixed";
-            }
+            let bgImage = {
+                 "Sci-Fi": "{{ url_for('static', filename='uploads/sci-bg.jpg') }}",
+                 "Fantasy": "{{ url_for('static', filename='uploads/fantasy-bg.jpg') }}",
+                 "Horror": "{{ url_for('static', filename='uploads/horror-bg.jpg') }}",
+                 "Mystery": "{{ url_for('static', filename='uploads/mystery-bg.jpg') }}",
+                 "Adventure": "{{ url_for('static', filename='uploads/advent-bg.jpg') }}"
+             };
+ 
+             if (bgImage["{{ genre }}"]) {
+                 document.body.style.backgroundImage = `url(${bgImage["{{ genre }}"]})`;
+                 document.body.style.backgroundSize = "cover";
+                 document.body.style.backgroundPosition = "center";
+                 document.body.style.backgroundRepeat = "no-repeat";
+                 document.body.style.backgroundAttachment = "fixed";
+             }
         });
 
         function copyStory() {
@@ -39,25 +39,19 @@
     </script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
         .story-container {
             background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 20px;
             border-radius: 10px;
-            text-align: justify;
+            text-align: center;  /* ✅ Centering title */
             max-width: 800px;
             margin: 50px auto;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
         }
         .story-content {
             font-size: 18px;
             line-height: 1.6;
+            text-align: justify;  /* ✅ Justify content */
         }
         .action-buttons button, .generate-new-btn {
             background-color: #ff9800;
@@ -76,10 +70,10 @@
 
 <body>
     <div class="story-container">
-        <h1>{{ title }}</h1>  <!-- ✅ Display generated title -->
+        <h1>{{ title }}</h1>  <!-- ✅ Properly generated title -->
 
-        <div class="story-content">
-            <p id="story-text">{{ story }}</p>
+        <div class="story-content" id="story-text">
+            {{ story|safe }}  <!-- ✅ Displays formatted story with paragraphs -->
         </div>
 
         <div class="action-buttons">

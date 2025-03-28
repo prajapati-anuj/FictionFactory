@@ -29,12 +29,27 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Function to Extract a Short Story Title
+# Function to Extract a Proper Story Title
+# Function to Extract a Proper Story Title
 def extract_title(story_text):
-    # Get the first sentence or phrase (1-4 words max)
-    first_line = story_text.split("\n")[0].strip()
-    words = re.findall(r'\b\w+\b', first_line)
-    return " ".join(words[:4]) if words else "Untitled Story"
+    """Generates a single, meaningful title from the story."""
+    title_prompt = f"Generate a short and catchy title (max 5 words) for this story:\n{story_text[:500]}"
+    title_response = model.generate_content(title_prompt)
+
+    if title_response and title_response.text:
+        # Extract only the first line as the title and clean it up
+        generated_title = title_response.text.strip().split("\n")[0]  
+        return re.sub(r'[^a-zA-Z0-9\s]', '', generated_title)  # Remove unwanted characters
+
+    return "Untitled Story"
+
+
+# Function to Format Story into Paragraphs
+def format_story(story_text):
+    """Formats the story text into structured paragraphs for better readability."""
+    paragraphs = re.split(r'\n\s*\n', story_text)  # Split by double newlines
+    formatted_story = "".join(f"<p>{para.strip()}</p>" for para in paragraphs if para.strip())
+    return formatted_story
 
 # Home Route (Index Page)
 @app.route("/")
@@ -48,13 +63,14 @@ def generate_story():
         key_points = request.form["key_points"]
         selected_genre = request.form["genre"]
 
-        prompt = f"Write a {selected_genre} story based on these key points: {key_points}"
+        prompt = f"Write an engaging {selected_genre} story with paragraphs based on these key points: {key_points}"
         response = model.generate_content(prompt)
 
         if response:
             story_text = response.text
-            story_title = extract_title(story_text)  # Get a short title
-            return render_template("story.html", story=story_text, title=story_title, genre=selected_genre)
+            story_title = extract_title(story_text)  # Generate a proper title
+            formatted_story = format_story(story_text)  # Format into paragraphs
+            return render_template("story.html", story=formatted_story, title=story_title, genre=selected_genre)
 
         flash("Error generating story. Try again!", "danger")
         return redirect(url_for("index"))
@@ -81,8 +97,9 @@ def image_story():
 
     if response:
         story_text = response.text
-        story_title = extract_title(story_text)  # Get a short title
-        return render_template("story.html", story=story_text, title=story_title, genre="")
+        story_title = extract_title(story_text)  # Generate a proper title
+        formatted_story = format_story(story_text)  # Format into paragraphs
+        return render_template("story.html", story=formatted_story, title=story_title, genre="")
 
     flash("Error generating story from image. Try again!", "danger")
     return redirect(url_for("index"))
