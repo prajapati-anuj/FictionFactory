@@ -16,6 +16,7 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 # MongoDB Configuration
 app.config["MONGO_URI"] = "mongodb://localhost:27017/StoryWriterDB"
 mongo = PyMongo(app)
+stories_collection = mongo.db.stories  # Collection to store stories
 
 # Configure Upload Folder & Allowed Extensions
 UPLOAD_FOLDER = "static/uploads"
@@ -70,6 +71,15 @@ def generate_story():
             story_text = response.text
             story_title = extract_title(story_text)  # Generate a proper title
             formatted_story = format_story(story_text)  # Format into paragraphs
+
+            story_data = {
+                "title": story_title,
+                "genre": selected_genre,
+                "key_points": key_points,
+                "story": formatted_story
+            }
+            stories_collection.insert_one(story_data)
+
             return render_template("story.html", story=formatted_story, title=story_title, genre=selected_genre)
 
         flash("Error generating story. Try again!", "danger")
