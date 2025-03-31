@@ -19,3 +19,5 @@ Thumbs.db
 # Flask specific
 instance/
 .webassets-cache
+
+.env
