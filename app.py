@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_pymongo import PyMongo
 import os
-import config
+import StoryWriter.config as config
 from werkzeug.utils import secure_filename
 import google.generativeai as genai
 import re
