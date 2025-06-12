@@ -1,25 +1,2 @@
-# Python bytecode files
-__pycache__/
-*.pyc
-*.pyo
-
-# Virtual environment directories
-venv/
-env/
-*.env
-
-# IDE/editor files (e.g., VS Code, PyCharm)
-.vscode/
-.idea/
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Flask specific
-instance/
-.webassets-cache
-
 .env
-".env" 
-"config.py" 
+config.py

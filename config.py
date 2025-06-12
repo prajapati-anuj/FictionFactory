@@ -1,1 +1,7 @@
-GEMINI_API_KEY = 'AIzaSyCHQ1MN7eASdfkiHEqIZ6CAdDBJj8GF4C8'
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # ✅ Load environment variables right here
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+print("Loaded GEMINI_API_KEY in config.py:", GEMINI_API_KEY)  # Optional debug

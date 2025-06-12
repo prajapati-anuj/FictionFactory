@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: storywriter
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: python app.py
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false  # We'll set this manually in the dashboard for security
+      - key: MONGO_URI
+        sync: false  # Same here

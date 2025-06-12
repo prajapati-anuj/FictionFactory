@@ -7,6 +7,12 @@ from werkzeug.utils import secure_filename
 import google.generativeai as genai
 import re
 
+import config
+
+print("GEMINI_API_KEY from env:", config.GEMINI_API_KEY)
+
+
+
 
 
 app = Flask(__name__)
@@ -16,8 +22,9 @@ app.secret_key = "supersecretkey"  # Change this for production
 genai.configure(api_key=config.GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
+
 # MongoDB Configuration
-app.config["MONGO_URI"] = "mongodb://localhost:27017/StoryWriterDB"
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb://localhost:27017/StoryWriterDB")
 mongo = PyMongo(app)
 stories_collection = mongo.db.stories  # Collection to store stories
 
@@ -119,4 +126,4 @@ def image_story():
 
 # Run Flask App
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
